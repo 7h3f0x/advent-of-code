@@ -1,0 +1,19 @@
+all: solve
+
+run: all sample input
+	./solve sample
+	@echo "----------------------------------"
+	./solve input
+
+format:
+	clang-format -i *.cpp
+
+%.o: %.cpp
+	$(CXX) -c -o $@ $^
+
+solve: solve.o
+	$(CXX) -o $@ $<
+
+clean:
+	-rm *.o solve
+
