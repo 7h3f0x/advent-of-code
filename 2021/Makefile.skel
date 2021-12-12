@@ -9,10 +9,10 @@ format:
 	clang-format -i *.cpp
 
 %.o: %.cpp
-	$(CXX) -c -o $@ $^
+	$(CXX) $(CPPFLAGS) -c -o $@ $^
 
 solve: solve.o
-	$(CXX) -o $@ $<
+	$(CXX) $(CPPFLAGS) -o $@ $<
 
 clean:
 	-rm *.o solve
