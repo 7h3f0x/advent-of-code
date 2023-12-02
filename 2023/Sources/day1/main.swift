@@ -1,13 +1,15 @@
 #!/usr/bin/env swift -enable-bare-slash-regex
 import Foundation
+import shared
 
-func readFile(filename: String) -> String? {
-    let path = FileManager.default.currentDirectoryPath.appending("/" + filename)
-    let url = URL(fileURLWithPath: path)
-    guard let data = try? Data(contentsOf: url) else {
-        return nil
+func getCalibrationValues1(content: [String]) -> [Int] {
+    return content.map { line in
+        let digits =
+            line
+            .filter({ $0.isNumber })
+            .map({ Int(String($0))! })
+        return digits.first! * 10 + digits.last!
     }
-    return String(data: data, encoding: .utf8)
 }
 
 let SPELLED_OUT_MAP: [String: String] = [
@@ -22,7 +24,7 @@ let SPELLED_OUT_MAP: [String: String] = [
     "nine": "9",
 ]
 
-func getCalibrationValues(content: [String]) -> [Int] {
+func getCalibrationValues2(content: [String]) -> [Int] {
     return content.map { line in
         let regex1 = /one|two|three|four|five|six|seven|eight|nine/
         let first_digit =
@@ -56,19 +58,24 @@ func main() {
 
     let filename = CommandLine.arguments[1]
 
-    guard let content = readFile(filename: filename) else {
+    guard let content = Utils.readFile(filename: filename) else {
         print("Unable to read input file")
         return
     }
 
-    let calibrationValues = getCalibrationValues(
+    let calibrationValues1 = getCalibrationValues1(
         content: content.components(separatedBy: CharacterSet.newlines))
-    let sum = calibrationValues.reduce(0, +)
-    print(sum)
+    let sum1 = calibrationValues1.reduce(0, +)
+    print("Part 1: \(sum1)")
+
+    let calibrationValues2 = getCalibrationValues2(
+        content: content.components(separatedBy: CharacterSet.newlines))
+    let sum2 = calibrationValues2.reduce(0, +)
+    print("Part 2: \(sum2)")
 }
 
 main()
 /*
-sample2: 281
-input: 56017
+sample1: 142
+input: 56506
 */
