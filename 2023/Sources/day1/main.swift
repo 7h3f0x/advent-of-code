@@ -75,7 +75,3 @@ func main() {
 }
 
 main()
-/*
-sample1: 142
-input: 56506
-*/
