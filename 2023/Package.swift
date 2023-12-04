@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v13)
     ],
     products: [
+        .executable(name: "day4", targets: ["day4"]),
         .executable(name: "day3", targets: ["day3"]),
         .executable(name: "day2", targets: ["day2"]),
         .executable(name: "day1", targets: ["day1"]),
@@ -16,6 +17,10 @@ let package = Package(
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
+        .executableTarget(
+            name: "day4",
+            dependencies: ["shared"]
+        ),
         .executableTarget(
             name: "day3",
             dependencies: ["shared"]
