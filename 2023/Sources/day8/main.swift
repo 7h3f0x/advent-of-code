@@ -4,7 +4,7 @@ import shared
 
 class Network {
     let instruction: String
-    let nodeMap: [String:(String, String)]
+    let nodeMap: [String: (String, String)]
     init(content: String) {
         let parts = content.split(separator: "\n\n")
         instruction = String(parts[0])
@@ -15,18 +15,18 @@ class Network {
             let inNode = String(parts[0])
             let outNodes = parts[1].split(separator: ", ").map { String($0) }
             return (inNode, (outNodes[0], outNodes[1]))
-        }.reduce(into: [String:(String, String)]()) { (result, node) in
+        }.reduce(into: [String: (String, String)]()) { (result, node) in
             result[node.0] = node.1
         }
     }
     func getNext(from node: String, instr: Character) -> String {
         switch instr {
-            case "R":
-                return nodeMap[node]!.1
-            case "L":
-                return nodeMap[node]!.0
-            default:
-                return node
+        case "R":
+            return nodeMap[node]!.1
+        case "L":
+            return nodeMap[node]!.0
+        default:
+            return node
         }
     }
     func numberOfSteps(from start: String, to end: String) -> Int {
@@ -71,7 +71,6 @@ func part2(content: String) -> Int {
     let network = Network(content: content)
     return network.numberOfStepsForGhost()
 }
-
 
 func main() {
     guard CommandLine.arguments.count > 1 else {
