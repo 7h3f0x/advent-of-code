@@ -2,6 +2,21 @@
 import Foundation
 import shared
 
+func gcd(_ a: Int, _ b: Int) -> Int {
+    var a = a
+    var b = b
+    while b != 0 {
+        let t = b
+        b = a % b
+        a = t
+    }
+    return a
+}
+
+func lcm(_ a: Int, _ b: Int) -> Int {
+    a * b / gcd(a, b)
+}
+
 class Network {
     let instruction: String
     let nodeMap: [String: (String, String)]
@@ -43,22 +58,27 @@ class Network {
         }
         return numSteps
     }
-    func isFinalConditionForGhost(state: [String]) -> Bool {
-        return state.allSatisfy { $0.last == "Z" }
-    }
-    func numberOfStepsForGhost() -> Int {
-        var state = nodeMap.keys.filter { $0.last == "A" }
+    func numberOfStepsForGhost(from start: String) -> Int {
+        var current = start
         var numSteps = 0
-        while !isFinalConditionForGhost(state: state) {
+        while numSteps == 0 || current.last != "Z" {
             for instr in instruction {
-                state = state.map { getNext(from: $0, instr: instr) }
+                current = getNext(from: current, instr: instr)
                 numSteps += 1
-                if isFinalConditionForGhost(state: state) {
+                if current.last == "Z" {
                     return numSteps
                 }
             }
         }
+        assert(numSteps % instruction.count == 0)
+        assert(numSteps == numberOfStepsForGhost(from: current))
         return numSteps
+    }
+    func getStartingForGhost() -> [String] {
+        return nodeMap.compactMap { $0.key.last == "A" ? $0.key : nil }
+    }
+    func numberOfStepsForGhost() -> Int {
+        getStartingForGhost().map { numberOfStepsForGhost(from: $0) }.reduce(1, lcm)
     }
 }
 
@@ -67,6 +87,7 @@ func part1(content: String) -> Int {
     return network.numberOfSteps(from: "AAA", to: "ZZZ")
 }
 
+// https://www.youtube.com/watch?v=_nnxLcrwO_U
 func part2(content: String) -> Int {
     let network = Network(content: content)
     return network.numberOfStepsForGhost()
@@ -85,7 +106,7 @@ func main() {
         return
     }
     print("Part1: \(part1(content: content))")
-    // print("Part2: \(part2(content: content))")
+    print("Part2: \(part2(content: content))")
 }
 
 main()
