@@ -8,7 +8,7 @@ def parse_input(fname: str) -> set:
         for x, line in enumerate(f):
             for y, char in enumerate(line):
                 if char == '#':
-                    active_states.add((x, y, 0))
+                    active_states.add((x, y, 0, 0))
 
     return active_states
 
@@ -18,7 +18,8 @@ def get_neighbours(state: tuple) -> set:
     for x in range(state[0] - 1, state[0] + 2):
         for y in range(state[1] - 1, state[1] + 2):
             for z in range(state[2] - 1, state[2] + 2):
-                neighbours.add((x, y, z))
+                for w in range(state[3] - 1, state[3] + 2):
+                    neighbours.add((x, y, z, w))
     neighbours.remove(state)
     return neighbours
 
@@ -57,6 +58,7 @@ if __name__ == "__main__":
     main()
 
 """
-for sample: 112
-for input: 218
+for sample: 848
+for input: 1908
 """
+
